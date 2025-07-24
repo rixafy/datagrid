@@ -607,7 +607,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set Grid data source
-	 * @param DataSource\IDataSource|array|\DibiFluent|\Dibi\Fluent|Nette\Database\Table\Selection|\Doctrine\ORM\QueryBuilder $source
+	 * @param DataSource\IDataSource|array|\DibiFluent|\Dibi\Fluent|Nette\Database\Table\Selection|\Doctrine\ORM\QueryBuilder|\Nextras\Orm\Collection\ICollection $source
 	 * @return static
 	 */
 	public function setDataSource($source)
@@ -851,6 +851,10 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		foreach ($sort as $key => $order) {
 			unset($sort[$key]);
+
+			if ($order !== 'ASC' && $order !== 'DESC') {
+				continue;
+			}
 
 			try {
 				$column = $this->getColumn($key);
@@ -2779,7 +2783,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getPerPage()
 	{
-		$items_per_page_list = $this->getItemsPerPageList();
+		$items_per_page_list = array_keys($this->getItemsPerPageList());
 
 		$per_page = $this->per_page ?: reset($items_per_page_list);
 
